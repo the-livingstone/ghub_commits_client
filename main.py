@@ -1,19 +1,18 @@
-
 import argparse
 import json
 import sys
-from pprint import pp
+
 from client import fetch_commits, parse_repo
 
 
-# GITHUB_REPO = 'https://github.com/torvalds/linux.git'
-# LIMIT = 100
-
-
 def main():
-    parser = argparse.ArgumentParser(description="Fetch GitHub commits as normalized JSON.")
+    parser = argparse.ArgumentParser(
+        description="Fetch GitHub commits as normalized JSON."
+    )
     parser.add_argument("--repo", "-r", required=True, help="owner/repo or GitHub URL")
-    parser.add_argument("--limit", "-n", type=int, default=100, help="How many commits to fetch")
+    parser.add_argument(
+        "--limit", "-n", type=int, default=100, help="How many commits to fetch"
+    )
     parser.add_argument("--output", "-o", help="Optional output file")
     args = parser.parse_args()
 
@@ -40,6 +39,7 @@ def main():
     else:
         print(text)
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
