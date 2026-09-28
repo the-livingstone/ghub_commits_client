@@ -1,4 +1,5 @@
 import re
+from typing import Any
 import httpx
 
 REPO_RE = re.compile(r"(?P<host>github\.com/)?(?P<owner>[\w|-]+)/(?P<repo>[\w|-]+)")
@@ -11,8 +12,15 @@ def parse_repo(value: str) -> tuple[str, str]:
         raise ValueError("Use owner/repo or https://github.com/owner/repo")
     return repo.group('owner'), repo.group('repo')
 
-def normalize(payload: dict) -> dict:
-    return payload
+def normalize(payload: dict[str, Any]) -> dict[str, str]:
+    author = (payload.get("commit") or {}).get("author") or {}
+    return {
+        "sha": payload.get("sha", ""),
+        "author_name": author.get("name") or "",
+        "author_email": author.get("email") or "",
+        "date": author.get("date") or "",
+        "message": (payload.get("commit") or {}).get("message") or "",
+    }
 
 def fetch_commits(owner: str, name: str, limit: int):
     url = ENDPOINT.format(owner, name)
